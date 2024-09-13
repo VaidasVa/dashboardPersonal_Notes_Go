@@ -10,9 +10,14 @@ func init() {
 	config.ConnectToDb()
 }
 
-func Main() {
-	err := config.DB.AutoMigrate(&models.Note{})
+func Migrate() {
+	var exists bool
+	err := config.DB.Model(models.Note{}).Select("count(*) > 0").Where("body = ?", models.NoteRequest.Body).
+		Find(&exists).Error
 	if err != nil {
-		return
+		err := config.DB.AutoMigrate(&models.Note{})
+		if err != nil {
+			return
+		}
 	}
 }

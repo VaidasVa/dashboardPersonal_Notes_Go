@@ -4,19 +4,13 @@ import (
 	"dashboardNotes/config"
 	"dashboardNotes/controllers"
 	"dashboardNotes/migrate"
-	"dashboardNotes/models"
 	"github.com/gin-gonic/gin"
 )
 
 func init() {
 	config.LoadEnvVars()
 	config.ConnectToDb()
-	var exists bool
-	err := config.DB.Model(models.Note{}).Select("count(*) > 0").Where("body = ?", models.NoteRequest.Body).
-		Find(&exists).Error
-	if err != nil {
-		migrate.Main()
-	}
+	migrate.Migrate()
 }
 
 func main() {
