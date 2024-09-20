@@ -61,6 +61,7 @@ func UpdateNote(c *gin.Context) {
 	result := config.DB.First(&note, id)
 	if result.Error != nil {
 		log.Fatal(result.Error, "Note not found for update")
+		return
 	}
 	config.DB.Model(&note).Updates(models.Note{
 		Title: models.NoteRequest.Title,
